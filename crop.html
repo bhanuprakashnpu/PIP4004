@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Growth Rate Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 450px;
+            text-align: center;
+        }
+
+        .container h1 {
+            color: #0066cc;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #005bb5;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d1ecf1;
+            border-radius: 5px;
+            color: #0c5460;
+            display: none;
+        }
+
+        .description-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9f7fc;
+            border-radius: 5px;
+            color: #31708f;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Crop Growth Rate Prediction</h1>
+        <form id="predictionForm">
+            <div class="form-group">
+                <select id="cropType" required>
+                    <option value="">Select Crop Type</option>
+                    <option value="Rice">Rice</option>
+                    <option value="Wheat">Wheat</option>
+                    <option value="Corn">Corn</option>
+                    <option value="Tomato">Tomato</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="number" id="temperature" placeholder="Temperature (°C)" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="humidity" placeholder="Humidity (%)" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="rainfall" placeholder="Rainfall (mm)" required>
+            </div>
+            <div class="form-group">
+                <input type="number" id="soil_quality" placeholder="Soil Quality (1-10)" required>
+            </div>
+            <div class="form-group">
+                <button type="button" onclick="runPrediction()">Run Prediction</button>
+            </div>
+        </form>
+
+        <div class="result-container" id="result-container">
+            <h3 id="result"></h3>
+        </div>
+
+        <div class="description-container" id="description-container">
+            <h4>Crop Growth Description:</h4>
+            <p id="description"></p>
+        </div>
+    </div>
+
+    <script>
+        // Example crop data (you can fetch this data from an online API or database)
+        const cropData = {
+            'Rice': { optimalTemp: [22, 30], optimalHumidity: [60, 80], idealSoilQuality: [6, 9] },
+            'Wheat': { optimalTemp: [15, 25], optimalHumidity: [50, 70], idealSoilQuality: [5, 8] },
+            'Corn': { optimalTemp: [18, 30], optimalHumidity: [55, 75], idealSoilQuality: [6, 9] },
+            'Tomato': { optimalTemp: [20, 28], optimalHumidity: [65, 85], idealSoilQuality: [6, 9] }
+        };
+
+        // Function to simulate a prediction (replace this with actual model logic)
+        function predictGrowth(temperature, humidity, rainfall, soil_quality) {
+            let growth_rate = (temperature * 0.1) + (humidity * 0.05) + (rainfall * 0.03) + (soil_quality * 0.2);
+            return growth_rate.toFixed(2);  // Return result rounded to 2 decimal places
+        }
+
+        // Function to fetch crop-specific information
+        function getCropDescription(crop) {
+            const cropInfo = cropData[crop];
+            if (cropInfo) {
+                return `The environmental conditions are not ideal for ${crop}. The temperature is higher than the recommended range, and the soil quality is poor. You may want to consider improving soil conditions or selecting a more heat-tolerant crop.`;
+            } else {
+                return "No crop data available.";
+            }
+        }
+
+        // Function to categorize growth rate and display result
+        function categorizeGrowthRate(growth_rate) {
+            if (growth_rate >= 3.5) {
+                return "High Growth Rate: The environmental conditions are highly favorable for growth.";
+            } else if (growth_rate >= 2.5) {
+                return "Medium Growth Rate: The environmental conditions are moderate, but some factors could be improved.";
+            } else {
+                return "Low Growth Rate: The environmental conditions are not ideal. Consider improving certain factors or choosing a different crop.";
+            }
+        }
+
+        // Function to run the prediction when the button is clicked
+        function runPrediction() {
+            var cropType = document.getElementById('cropType').value;
+            var temperature = parseFloat(document.getElementById('temperature').value);
+            var humidity = parseFloat(document.getElementById('humidity').value);
+            var rainfall = parseFloat(document.getElementById('rainfall').value);
+            var soil_quality = parseFloat(document.getElementById('soil_quality').value);
+
+            // Perform prediction
+            var growth_rate = predictGrowth(temperature, humidity, rainfall, soil_quality);
+            
+            // Categorize the growth rate
+            var growthRateCategory = categorizeGrowthRate(growth_rate);
+
+            // Display the prediction result
+            document.getElementById('result').innerText = `Predicted Growth Rate: ${growth_rate} - ${growthRateCategory}`;
+            document.getElementById('result-container').style.display = 'block';
+
+            // Get and display the crop description
+            var description = getCropDescription(cropType);
+            document.getElementById('description').innerHTML = description;
+            document.getElementById('description-container').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

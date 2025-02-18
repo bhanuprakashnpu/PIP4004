@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSphere - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKeEcYGg54ufmxKGtJSj5dJWhxzDD-s7s",
+            authDomain: "agrisphere-2925d.firebaseapp.com",
+            projectId: "agrisphere-2925d",
+            storageBucket: "agrisphere-2925d.appspot.com",
+            messagingSenderId: "1027644535391",
+            appId: "1:1027644535391:web:208e185376b205fc19a1ea",
+            measurementId: "G-LX07KLSRTP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if the user is logged in
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    document.getElementById("profile-name").textContent = user.email;
+                } else {
+                    window.location.href = "login.html"; // Redirect to login page if not authenticated
+                }
+            });
+
+            // Logout function
+            document.getElementById("logout-btn").addEventListener("click", async () => {
+                try {
+                    await signOut(auth);
+                    window.location.href = "login.html"; // Redirect to login page after logout
+                } catch (error) {
+                    console.error("Logout Error:", error);
+                    alert("Error logging out. Please try again.");
+                }
+            });
+
+            // Add click events for the boxes
+            document.getElementById("crop-growth").addEventListener("click", () => {
+                window.location.href = "crop.html"; // Redirect to crop.html
+            });
+
+            // Similar event listeners for other boxes
+            document.getElementById("agri-marketplace").addEventListener("click", () => {
+                window.location.href = "marketplace.html";
+            });
+            document.getElementById("crop-disease").addEventListener("click", () => {
+                window.location.href = "disease.html";
+            });
+            document.getElementById("agri-news").addEventListener("click", () => {
+                window.location.href = "news.html";
+            });
+            document.getElementById("hydroponics").addEventListener("click", () => {
+                window.location.href = "hydroponics.html";
+            });
+        });
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f4f4f4;
+            flex-direction: column;
+            position: relative;
+        }
+        .menu-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .menu-content {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 10px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .menu-content a {
+            color: #007BFF;
+            display: block;
+            padding: 8px;
+            text-decoration: none;
+        }
+        .menu-content a:hover {
+            background-color: #f0f0f0;
+        }
+        .menu-container:hover .menu-content {
+            display: block;
+        }
+        .container {
+            text-align: center;
+            padding: 10px 20px;
+            background: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: auto; /* Auto width based on content */
+            margin-top: 40px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .box {
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #007BFF; /* Simple outline */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .box:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+        .box h3 {
+            color: #007BFF;
+            font-size: 16px;
+            margin: 0;
+        }
+        .boxes-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .box-container-wrapper {
+            width: auto;
+            margin: 5px;
+        }
+
+        /* Profile Section in Menu */
+        .menu-content p {
+            color: black;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .profile-img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Responsive styling for smaller screens */
+        @media (max-width: 768px) {
+            .box-container-wrapper {
+                width: 90%;
+            }
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <span>☰ Menu</span>
+        <div class="menu-content">
+            <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/30" alt="Profile" class="profile-img">
+                <p id="profile-name">Profile Name</p>
+            </div>
+            <a href="javascript:void(0)" id="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Welcome to AgriSphere Dashboard</h2>
+    </div>
+
+    <div class="boxes-container">
+        <div class="box-container-wrapper" id="crop-growth">
+            <div class="box">
+                <h3>Crop Growth Prediction</h3>
+            </div>
+        </div>
+        <div class="box-container-wrapper" id="agri-marketplace">
+            <div class="box">
+                <h3>Agri Marketplace</h3>
+            </div>
+        </div>
+        <div class="box-container-wrapper" id="crop-disease">
+            <div class="box">
+                <h3>Crop Disease Identifier</h3>
+            </div>
+        </div>
+        <div class="box-container-wrapper" id="agri-news">
+            <div class="box">
+                <h3>Agri-News Dashboard</h3>
+            </div>
+        </div>
+        <div class="box-container-wrapper" id="hydroponics">
+            <div class="box">
+                <h3>Home Hydroponics & Balcony Plant Growth</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
